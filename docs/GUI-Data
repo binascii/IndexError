@@ -1,0 +1,11 @@
+Installation
+Enterprise Linux
+Before installing, enable Extra Packages for Enterprise Linux (EPEL). Learn how to enable EPEL in EPEL documentation.
+
+Enable EPEL for RHEL/CentOS 8
+Run these commands as root. Enable EPEL for RHEL/CentOS 7 is very similar.
+
+yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+on RHEL 8 it is required to also enable the codeready-builder-for-rhel-8-*-rpms repository since EPEL packages may depend on packages from it:
+
+subscription-manager repos --enable "codeready-builder-for-rhel-8-$(/bin/arch)-rpms"
