@@ -1,0 +1,42 @@
+specfile_path: oval-graph.spec
+upstream_tag_template: v{version}
+synced_files:
+  # copy a file from root of the upstream repo to dist-git
+  - oval-graph.spec
+upstream_package_name: oval_graph
+downstream_package_name: oval-graph
+upstream_project_url: https://github.com/OpenSCAP/oval-graph
+
+actions:
+  create-archive:
+    - "python3 setup.py sdist --dist-dir ."
+    - "sh -c 'echo oval_graph-$(python3 setup.py --version).tar.gz'"
+  get-current-version:
+    - "python3 setup.py --version"
+jobs:
+- job: sync_from_downstream
+  trigger: commit
+  metadata:
+    dist_git_branches: fedora-rawhide
+
+- job: propose_downstream
+  trigger: release
+  metadata:
+    dist_git_branches: fedora-rawhide
+
+- job: copr_build
+  trigger: pull_request
+  metadata:
+    targets:
+    - fedora-all
+    - epel-7-x86_64
+    - epel-8-x86_64
+
+- job: tests
+  trigger: pull_request
+  metadata:
+    targets:
+    - fedora-all
+    - epel-8-x86_64
+# EPEL 7 test is disabled, because for install is used dnf on CentOS 7 
+#    - epel-7-x86_64
